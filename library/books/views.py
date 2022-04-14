@@ -33,3 +33,4 @@ class BooksPublishersViewSet(viewsets.ModelViewSet):
     queryset = BooksPublishers.objects.all()
     serializer_class = BooksPublishersSerializer
     permission_classes = []
+
