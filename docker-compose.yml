@@ -4,9 +4,9 @@ services:
     image: postgres:14-alpine
     container_name: "postgres${PSQL_PORT}"
     environment:
-      POSTGRES_PASSWORD: "${PSQL_PASSWORD}"
-      POSTGRES_DB: "${PSQL_DBNAME}"
-      POSTGRES_USER: "${PSQL_USERNAME}"
+      PSQL_PASS: "${PSQL_PASS}"
+      PSQL_DB: "${PSQL_DB}"
+      PSQL_USER: "${PSQL_USER}"
     ports:
       - "100${PSQL_PORT}:55${PSQL_PORT}"
     volumes:
@@ -22,9 +22,9 @@ services:
     depends_on:
       - postgres_db23
     environment:
-      PSQL_DBNAME: "${PSQL_DBNAME}"
-      PSQL_USERNAME: "${PSQL_USERNAME}"
-      PSQL_PASS: "${PSQL_PASSWORD}"
+      PSQL_DB: "${PSQL_DB}"
+      PSQL_USER: "${PSQL_USER}"
+      PSQL_PASS: "${PSQL_PASS}"
       PSQL_HOST: "postgres_db${PSQL_PORT}"
       PSQL_PORT: "55${PSQL_PORT}"
       JWT_TOKEN_TIME: "${JWT_TOKEN_TIME}"

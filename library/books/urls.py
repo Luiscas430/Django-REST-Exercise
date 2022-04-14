@@ -3,6 +3,7 @@ from rest_framework import routers
 from django.urls import path, include
 
 router = routers.DefaultRouter()
+router.register(r'thing', views.ThingViewSet)
 router.register(r'authors', views.AuthorViewSet, 'authors')
 router.register(r'booksauthor', views.BooksAuthorsViewSet, 'booksauthor')
 router.register(r'publishers', views.PublisherViewSet, 'publishers')

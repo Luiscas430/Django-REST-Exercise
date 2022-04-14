@@ -1,5 +1,9 @@
 from django.db import models
 
+class Thing(models.Model):
+    name = models.CharField(max_length = 128)
+    image = models.TextField(null=False)
+
 class Author(models.Model):
     name = models.CharField(max_length = 128, default="")
     last_name = models.CharField(max_length = 128, null=True)
