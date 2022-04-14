@@ -1,0 +1,42 @@
+version: '3'
+services:  
+  postgres_db23:
+    image: postgres:14-alpine
+    container_name: "postgres${PSQL_PORT}"
+    environment:
+      POSTGRES_PASSWORD: "${PSQL_PASSWORD}"
+      POSTGRES_DB: "${PSQL_DBNAME}"
+      POSTGRES_USER: "${PSQL_USERNAME}"
+    ports:
+      - "100${PSQL_PORT}:55${PSQL_PORT}"
+    volumes:
+      - "${POSTGRES_VOLUME_PATH}:/usr/src/postgres"
+    networks:
+      - our-library-net 
+    command: "-p 55${PSQL_PORT}"
+
+  web23:
+    build: .
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && pytest && python manage.py runserver 0.0.0.0:80${PSQL_PORT}"
+    container_name: "django${PSQL_PORT}"
+    depends_on:
+      - postgres_db23
+    environment:
+      PSQL_DBNAME: "${PSQL_DBNAME}"
+      PSQL_USERNAME: "${PSQL_USERNAME}"
+      PSQL_PASS: "${PSQL_PASSWORD}"
+      PSQL_HOST: "postgres_db${PSQL_PORT}"
+      PSQL_PORT: "55${PSQL_PORT}"
+      JWT_TOKEN_TIME: "${JWT_TOKEN_TIME}"
+
+    volumes:
+      - "${DJANGO_VOLUME_PATH}:/usr/src/django/library"
+    ports:
+      - "90${PSQL_PORT}:80${PSQL_PORT}"
+    networks:
+      - our-library-net
+networks:
+  our-library-net:
+    external: true
+    driver: bridge
+
