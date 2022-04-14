@@ -1,3 +1,5 @@
+[![Build Status](https://app.travis-ci.com/Luiscas430/Django-REST-Exercise.svg?branch=travis)](https://app.travis-ci.com/Luiscas430/Django-REST-Exercise)
+
 # Django-and-Django-REST-Framework
 
 ## Setup
