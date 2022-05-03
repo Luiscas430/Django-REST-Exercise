@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 from os import getenv, environ as env
 from pathlib import Path
+import django 
+from django.utils.encoding import force_str
+django.utils.encoding.force_text = force_str
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -60,6 +62,7 @@ INSTALLED_APPS = [
     'library.magazines',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -94,6 +97,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'library.wsgi.application'
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": 'redis://' + env.get('REDIS_HOST') + \
+        ':' + env.get('REDIS_PORT') + '/0',
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -117,7 +132,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         #'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
         #'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
+    ],
+    #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    #'PAGE_SIZE': 10,
 }
 
 from datetime import timedelta
@@ -170,3 +187,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+GRAPHENE = {
+    'SCHEMA': 'library.books.schema.schema'
+}

@@ -20,12 +20,22 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 #from library.views import CustomTokenObtainPairView
+from graphene_django.views import GraphQLView
+from django.views.decorators.csrf import csrf_exempt
 
+#GRAPHQL URLs
 urlpatterns = [
+    # ...
+    path('graphql', csrf_exempt(GraphQLView.as_view(graphiql=True))),
+]
+
+#JWT URLs
+urlpatterns += [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
+#APP URLs
 urlpatterns += [
     path('admin/', admin.site.urls), #Poner prefijo api en las rutas
     path('api_auth/', include('rest_framework.urls')),

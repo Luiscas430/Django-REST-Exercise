@@ -15,12 +15,24 @@ services:
       - our-library-net 
     command: "-p 55${PSQL_PORT}"
 
+  redis_service23:
+    image: redis:7-alpine
+    container_name: "redis${PSQL_PORT}"
+    command: "--port 63${PSQL_PORT}"
+    ports:
+      - "120${PSQL_PORT}:63${PSQL_PORT}"
+    volumes: 
+      - "${REDIS_VOLUME_PATH}:/usr/local/etc/redis"
+    networks:
+      - our-library-net
+
   web23:
     build: .
     command: bash -c "python manage.py makemigrations && python manage.py migrate && pytest && python manage.py runserver 0.0.0.0:80${PSQL_PORT}"
     container_name: "django${PSQL_PORT}"
     depends_on:
       - postgres_db23
+      - redis_service23
     environment:
       PSQL_DB: "${PSQL_DB}"
       PSQL_USER: "${PSQL_USER}"
@@ -28,6 +40,8 @@ services:
       PSQL_HOST: "postgres_db${PSQL_PORT}"
       PSQL_PORT: "55${PSQL_PORT}"
       JWT_TOKEN_TIME: "${JWT_TOKEN_TIME}"
+      REDIS_HOST: "redis_service${PSQL_PORT}"
+      REDIS_PORT: "63${PSQL_PORT}"
 
     volumes:
       - "${DJANGO_VOLUME_PATH}:/usr/src/django/library"
